@@ -1,0 +1,18 @@
+{% include "base.html" %}
+
+{% block content %}
+    {% for magazine in magazines %}
+        <div>
+            <hr>
+            <br>
+            <a href="{{ magazine.get_absolute_url }}">
+                <p>{{ magazine.title|capfirst }}</p>
+            </a>
+            <a href="{{ magazine.get_absolute_url }}">
+                <p>description: {{ magazine.description|truncatewords:"5" }}</p>
+            </a>
+            <br>
+            <hr>
+        </div>
+    {% endfor %}
+{% endblock %}
