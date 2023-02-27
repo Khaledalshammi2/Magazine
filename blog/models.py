@@ -13,8 +13,6 @@ class Magazine(models.Model):
         return self.name
 
 
-
-
 class Blog(models.Model):
     STATUS_CHOICES = [
         ('d', 'Draft'),
@@ -24,7 +22,7 @@ class Blog(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=150)
     content = models.TextField()
-    magazine = models.ForeignKey(User, on_delete=models.CASCADE)
+    magazine = models.ForeignKey(Magazine, on_delete=models.CASCADE)
     status = models.CharField(max_length=1, choices=STATUS_CHOICES)
 
     def __str__(self) -> str:
