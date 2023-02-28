@@ -9,7 +9,7 @@
                 <p>{{ magazine.title|capfirst }}</p>
             </a>
             <a href="{{ magazine.get_absolute_url }}">
-                <p>description: {{ magazine.description|truncatewords:"5" }}</p>
+                <p>description: {{ magazine.description|truncatechars:20 }}</p>
             </a>
             <br>
             <hr>
