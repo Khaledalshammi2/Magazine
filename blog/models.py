@@ -1,6 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
+from django.contrib import admin
+from django.utils.translation import gettext_lazy as _
+
+
+# used with Model fields, relationships, verbose_name, help_text, Model methods description
 
 
 class Author(models.Model):
@@ -47,3 +52,20 @@ class Blog(models.Model):
 
     def get_absolute_url(self):
         return reverse('blogs:blog_details', args={self.pk})
+
+
+class Person(models.Model):
+    name = models.CharField(max_length=100, help_text=_('Enter your fullname'))
+    age = models.IntegerField()
+
+    class Meta:
+        verbose_name = _('person')
+        verbose_name_plural = _('persons')
+
+    @admin.display(description=_('above 18'))
+    def above_20(self):
+        return self.age > 18
+
+
+class Car(models.Model):
+    person = models.ForeignKey(Person, on_delete=models.CASCADE, verbose_name=_('car'), )
