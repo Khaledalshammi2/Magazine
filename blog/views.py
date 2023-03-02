@@ -87,35 +87,35 @@ def translation_view3(request):
         "test": test})
 
 
-def gettext_and_gettext_lazy(request):
-    name = gettext_lazy('Khaled ')
-    age = _("20 years old")
-    return render(request, "blog/translation_template2.html", {
-        "name": name,
-        "age": age
-    })
-
-
-class LocalizationView(View):
-    def get(self, request):
-        car = Car.objects.get(pk=1)
-        return render(request, "blog/localization.html", {"car": car})
-
-class ProfitView(FormView):
-    form_class = ProfitForm
-    template_name = "blog/profit.html"
-    success_url = reverse_lazy('blogs:magazines')
-    def form_valid(self, form):
-        storage = form.cleaned_data['storage']
-        profit = form.cleaned_data['profit']
-        person = Person.objects.get(pk=1)
-        Car.objects.create(person=person, storage=storage, profit=profit)
-        return super().form_valid(form)
-
-
-def set_timezone(request):
-    if request.method == 'POST':
-        request.session['django_timezone'] = request.POST['timezone']
-        return redirect('/')
-    else:
-        return render(request, 'blog/time_zone_template.html', {'timezones': pytz.common_timezones})
+# def gettext_and_gettext_lazy(request):
+#     name = gettext_lazy('Khaled ')
+#     age = _("20 years old")
+#     return render(request, "blog/translation_template2.html", {
+#         "name": name,
+#         "age": age
+#     })
+#
+#
+# class LocalizationView(View):
+#     def get(self, request):
+#         car = Car.objects.get(pk=1)
+#         return render(request, "blog/localization.html", {"car": car})
+#
+# class ProfitView(FormView):
+#     form_class = ProfitForm
+#     template_name = "blog/profit.html"
+#     success_url = reverse_lazy('blogs:magazines')
+#     def form_valid(self, form):
+#         storage = form.cleaned_data['storage']
+#         profit = form.cleaned_data['profit']
+#         person = Person.objects.get(pk=1)
+#         Car.objects.create(person=person, storage=storage, profit=profit)
+#         return super().form_valid(form)
+#
+#
+# def set_timezone(request):
+#     if request.method == 'POST':
+#         request.session['django_timezone'] = request.POST['timezone']
+#         return redirect('/')
+#     else:
+#         return render(request, 'blog/time_zone_template.html', {'timezones': pytz.common_timezones})

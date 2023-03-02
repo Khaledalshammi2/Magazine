@@ -12,8 +12,8 @@ urlpatterns = [
     path('test/', views.translation_view1),
     path('page/<int:page>/', views.TranslationView2.as_view()),
     path(_('test2/'), views.translation_view3),
-    path('difference/', views.gettext_and_gettext_lazy),
-    path('Localize/', views.LocalizationView.as_view()),
-    path('profit/', views.ProfitView.as_view()),
-    path('timezone/', views.set_timezone, name="set_timezone"),
+    # path('difference/', views.gettext_and_gettext_lazy),
+    # path('Localize/', views.LocalizationView.as_view()),
+    # path('profit/', views.ProfitView.as_view()),
+    # path('timezone/', views.set_timezone, name="set_timezone"),
 ]
