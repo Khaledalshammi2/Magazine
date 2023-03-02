@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from django.utils.translation import gettext_lazy as _
 
 app_name = 'blogs'
 
@@ -10,5 +11,9 @@ urlpatterns = [
     path('author/<int:pk>/', views.AuthorView.as_view(), name="author_details"),
     path('test/', views.translation_view1),
     path('page/<int:page>/', views.TranslationView2.as_view()),
-    path('test2/', views.translation_view3),
+    path(_('test2/'), views.translation_view3),
+    path('difference/', views.gettext_and_gettext_lazy),
+    path('Localize/', views.LocalizationView.as_view()),
+    path('profit/', views.ProfitView.as_view()),
+    path('timezone/', views.set_timezone, name="set_timezone"),
 ]

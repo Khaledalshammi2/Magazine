@@ -1,0 +1,14 @@
+{% load l10n %}
+{% load humanize %}
+
+{% localize on %}
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Submit</button>
+    </form>
+{% endlocalize %}
+
+{% localize off %}
+    {{ value|localize }}
+{% endlocalize %}

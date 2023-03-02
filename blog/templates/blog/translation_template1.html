@@ -1,0 +1,47 @@
+{% load i18n %}
+{% load blog_extras %}
+
+{% get_available_languages as langs %}
+{% get_current_language as CURRENT_LANGUAGE %}
+{% get_language_info for LANGUAGE_CODE as languages %}
+
+<div>
+    {% translate "View this page in:" %}
+    {% for lang_code, lang_name in langs %}
+        {% if CURRENT_LANGUAGE|custom_stringify == lang_code|custom_stringify %}
+        {% else %}
+            {% language lang_code %}
+                <a href="{% url 'blogs:magazines' %}">{{ lang_name }}</a>
+            {% endlanguage %}
+        {% endif %}
+    {% endfor %}
+</div>
+
+{% trans "khaled alshammi" as _(name) %}
+{% trans "Sunday" context "day name" as _(day) %}
+{% trans "khaled site" %}
+
+<div>
+    <p>{{ result }}</p>
+    <p>{{ test }}</p>
+    <p>{{ name }}</p>
+    <p>{{ day }}</p>
+</div>
+
+<a href="{% url 'blogs:magazines' %}">{% translate "Go to homepage" %}</a>
+
+<h1>
+    {% blocktranslate trimmed %}
+      First sentence.
+      Second paragraph.
+    {% endblocktranslate %}
+</h1>
+
+<button type="submit">{% translate "Go" %}</button>
+
+<div>
+    Language code: {{ languages.code }}<br>
+    Name of language: {{ languages.name_local }}<br>
+    Name in English: {{ languages.name }}<br>
+    Active language: {{ languages.name_translated }}
+</div>

@@ -3,6 +3,8 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
+from django.utils import timezone
+import datetime
 
 
 # used with Model fields, relationships, verbose_name, help_text, Model methods description
@@ -20,6 +22,10 @@ class Author(models.Model):
     def get_absolute_url(self):
         return reverse('blogs:author_details', args={self.pk})
 
+    class Meta:
+        verbose_name = _('author')
+        verbose_name_plural = _('authors')
+
 
 class Magazine(models.Model):
     title = models.CharField(max_length=150)
@@ -31,6 +37,10 @@ class Magazine(models.Model):
 
     def get_absolute_url(self):
         return reverse('blogs:magazine_details', args={self.pk})
+
+    class Meta:
+        verbose_name = _('magazine')
+        verbose_name_plural = _('magazines')
 
 
 class Blog(models.Model):
@@ -53,6 +63,10 @@ class Blog(models.Model):
     def get_absolute_url(self):
         return reverse('blogs:blog_details', args={self.pk})
 
+    class Meta:
+        verbose_name = _('blog')
+        verbose_name_plural = _('blogs')
+
 
 class Person(models.Model):
     name = models.CharField(max_length=100, help_text=_('Enter your fullname'))
@@ -68,4 +82,16 @@ class Person(models.Model):
 
 
 class Car(models.Model):
-    person = models.ForeignKey(Person, on_delete=models.CASCADE, verbose_name=_('car'), )
+    person = models.ForeignKey(Person, on_delete=models.CASCADE, verbose_name=_('person'), )
+    # date = models.DateTimeField(localize=True)
+    publish_date = models.DateTimeField(auto_now_add=True)
+    storage = models.IntegerField()
+    profit = models.DecimalField(max_digits=4, decimal_places=2)
+
+    class Meta:
+        verbose_name = _('car')
+        verbose_name_plural = _('cars')
+
+
+print(timezone.now())
+print(datetime.datetime.now())

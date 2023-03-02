@@ -32,3 +32,15 @@ class AuthorForm(forms.ModelForm):
 #             return bio
 #         else:
 #             raise forms.ValidationError(error_message % len(bio))
+
+# class MyForm(forms.ModelForm):
+#     class Meta:
+#         model = Car
+#         fields = ['date']
+#         widgets = {
+#             'my_date': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}, localize=True),
+#         }
+
+class ProfitForm(forms.Form):
+   storage = forms.IntegerField()
+   profit = forms.DecimalField(max_digits=4, decimal_places=2, localize=True)

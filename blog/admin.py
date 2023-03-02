@@ -1,20 +1,20 @@
 from django.contrib import admin
-from .models import Blog, Magazine, Author
+from .models import Blog, Magazine, Author, Person, Car
 from django.utils.translation import ngettext
 from django.contrib import messages
 from django.utils.safestring import mark_safe
 from django.utils.html import format_html
 from .forms import AuthorForm
+from django.utils.translation import gettext_lazy as _
 
 
 # from django.utils.functional import lazy
 # from django.utils.translation import gettext_lazy as _
-#
 # mark_safe_lazy = lazy(mark_safe, str)
 # example of how to use it
 # lazy_string = mark_safe_lazy(_("<p>khaled</p>"))
 
-@admin.display(description='Author')
+@admin.display(description=_('Author'))
 def colored_author(obj):
     return format_html(
         '<span style="color: #{};">{}</span>',
@@ -23,7 +23,7 @@ def colored_author(obj):
     )
 
 
-@admin.display(description='Title')
+@admin.display(description=_('Title'))
 def colored_title(obj):
     return format_html(
         '<span style="color: #{};">{}</span>',
@@ -37,12 +37,12 @@ def published(obj):
     return obj.status == "p"
 
 
-@admin.display(description='Image')
+@admin.display(description=_('Image'))
 def display_image(obj):
     return mark_safe('<img src="{}" width="60" />'.format(obj.cover_image.url))
 
 
-@admin.action(description='Mark selected blogs as published')
+@admin.action(description=_('Mark selected blogs as published'))
 def make_published(self, request, queryset):
     updated_blog = queryset.update(status='p')
     self.message_user(request, ngettext(
@@ -52,7 +52,7 @@ def make_published(self, request, queryset):
     ) % updated_blog, messages.SUCCESS)
 
 
-@admin.action(description='Mark selected blogs as draft')
+@admin.action(description=_('Mark selected blogs as draft'))
 def make_draft(self, request, queryset):
     updated_blog = queryset.update(status='d')
     self.message_user(request, ngettext(
@@ -62,7 +62,7 @@ def make_draft(self, request, queryset):
     ) % updated_blog, messages.SUCCESS)
 
 
-@admin.action(description='Mark selected blogs as withdrawn')
+@admin.action(description=_('Mark selected blogs as withdrawn'))
 def make_withdrawn(self, request, queryset):
     updated_blog = queryset.update(status='w')
     self.message_user(request, ngettext(
@@ -100,7 +100,7 @@ class MagazineAdmin(admin.ModelAdmin):
     readonly_fields = ('id', 'publish_date')
     search_fields = ['title']
 
-    @admin.display(description='Description')
+    @admin.display(description=_('Description'))
     def truncated_description(self, obj):
         result = obj.description[:20] + '...' if len(obj.description) > 50 else obj.description
         return format_html(
@@ -109,7 +109,7 @@ class MagazineAdmin(admin.ModelAdmin):
             result
         )
 
-    @admin.display(description='Title')
+    @admin.display(description=_('Title'))
     def colored_title(self, obj):
         return format_html(
             '<span style="color: #{};">{}</span>',
@@ -118,12 +118,12 @@ class MagazineAdmin(admin.ModelAdmin):
         )
 
 
-@admin.display(description='Image')
+@admin.display(description=_('Image'))
 def display_image(obj):
     return mark_safe('<img src="{}" width="60" />'.format(obj.profile_image.url))
 
 
-@admin.display(description='Name')
+@admin.display(description=_('Name'))
 def colored_name(obj):
     return format_html(
         '<span style="color: #{};">{}</span>',
@@ -139,7 +139,7 @@ class AuthorAdmin(admin.ModelAdmin):
     readonly_fields = ('id',)
     search_fields = ['name']
 
-    @admin.display(description='Email')
+    @admin.display(description=_('Email'))
     def email_field(self, obj):
         return format_html('<a href="mailto:{}/">{}</a>', obj.email, obj.email)
 
@@ -148,7 +148,10 @@ class AuthorAdmin(admin.ModelAdmin):
 admin.site.register(Blog, BlogAdmin)
 admin.site.register(Magazine, MagazineAdmin)
 admin.site.register(Author, AuthorAdmin)
+admin.site.register(Person)
+admin.site.register(Car)
 
-admin.site.index_title = "Magazine"
-admin.site.site_header = "Khaled site"
-admin.site.site_title = "Magazine"
+
+admin.site.index_title = _("Magazine")
+admin.site.site_header = _("Khaled site")
+admin.site.site_title = _("Magazine")

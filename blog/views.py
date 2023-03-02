@@ -6,6 +6,13 @@ from django.utils.text import format_lazy
 from django.views import View
 from django.http import HttpResponse
 from django.utils.translation import pgettext
+from django.utils.functional import lazy
+from django.utils.safestring import mark_safe
+from django.views.generic.edit import FormView
+from django.urls import reverse_lazy
+from django.shortcuts import redirect, render
+import pytz
+from .forms import ProfitForm
 
 
 class Magazines(ListView):
@@ -52,6 +59,7 @@ def translation_view1(request):
     output = _("Hello world, We are in %(month)s") % {'month': month}
     return HttpResponse(output)
 
+
 class TranslationView2(View):
     def get(self, request, page):
         pluralization = ngettext(
@@ -59,15 +67,55 @@ class TranslationView2(View):
             "I'm in pages %(page)d",
             page,
         ) % {
-                'page': page,
-                }
+                            'page': page,
+                        }
         return HttpResponse(pluralization)
+
+
+mark_safe_lazy = lazy(mark_safe, str)
 
 
 def translation_view3(request):
     # name = gettext_lazy('Khaled')
     name = _('Khaled')
-    age = _(20)
+    age = _("20 years old")
     # result = format_lazy('{name}: {age} years old', name=name, age=age)
-    result = "%(name)s %(age)d years old" % {"name": name, "age": age}
-    return render(request, "translation_template1.html", {"result": result})
+    result = "%(name)s %(age)s" % {"name": name, "age": age}
+    test = mark_safe_lazy(_("<p>programmer</p>"))
+    return render(request, "blog/translation_template1.html", {
+        "result": result,
+        "test": test})
+
+
+def gettext_and_gettext_lazy(request):
+    name = gettext_lazy('Khaled ')
+    age = _("20 years old")
+    return render(request, "blog/translation_template2.html", {
+        "name": name,
+        "age": age
+    })
+
+
+class LocalizationView(View):
+    def get(self, request):
+        car = Car.objects.get(pk=1)
+        return render(request, "blog/localization.html", {"car": car})
+
+class ProfitView(FormView):
+    form_class = ProfitForm
+    template_name = "blog/profit.html"
+    success_url = reverse_lazy('blogs:magazines')
+    def form_valid(self, form):
+        storage = form.cleaned_data['storage']
+        profit = form.cleaned_data['profit']
+        person = Person.objects.get(pk=1)
+        Car.objects.create(person=person, storage=storage, profit=profit)
+        return super().form_valid(form)
+
+
+def set_timezone(request):
+    if request.method == 'POST':
+        request.session['django_timezone'] = request.POST['timezone']
+        return redirect('/')
+    else:
+        return render(request, 'blog/time_zone_template.html', {'timezones': pytz.common_timezones})
