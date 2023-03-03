@@ -1,0 +1,38 @@
+{% include "blog/base.html" %}
+{% load i18n %}
+
+{% block content %}
+    <div>
+        <h3>{{ magazine.get_title|capfirst }}</h3>
+        <p>{{ magazine.get_description }}</p>
+        <p>
+            {% trans "Created on " %} {{ magazine.publish_date|date:'F j, Y' }}
+            {% trans "at" %} {{ magazine.publish_date|time:'g:i A' }}
+        </p>
+    </div>
+    <br>
+    <br>
+    <br>
+    {% if blogs %}
+        {{ blogs|length }} {% trans "Blog" %} {{ blogs|length|pluralize }}:
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        {% for blog in blogs %}
+            <div>
+                <a href="{{ blog.get_absolute_url }}">
+                    <img width="222px" src="{{ blog.cover_image.url }}">
+                </a>
+                <p>{% trans "Author: " %} {{ blog.author.name }}</p>
+                <h4>{% trans "Title: " %} {{ blog.get_title }}</h4>
+            </div>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+        {% endfor %}
+    {% else %}
+        <h3>{% trans "0 blogs... No blogs to display" %}</h3>
+    {% endif %}
+{% endblock %}

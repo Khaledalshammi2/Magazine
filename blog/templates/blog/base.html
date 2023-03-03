@@ -1,16 +1,18 @@
 {% load static %}
+{% load i18n %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Khaled</title>
+    <title>{% trans "Khaled" %}</title>
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
 </head>
 <body>
     <div class="header">
-        <h1>Khaled Site</h1>
+        <h1>{% trans "Khaled Site" %}</h1>
         <div>
-            <h3><a href="{% url 'blogs:magazines' %}">Magazines</a></h3>
+            <h3><a href="{% url 'blogs:magazines' %}">{% trans "Magazines" %}</a></h3>
         </div>
     </div>
     {% block content %}{% endblock %}

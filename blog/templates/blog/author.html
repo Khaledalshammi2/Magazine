@@ -1,0 +1,30 @@
+{% include "blog/base.html" %}
+{% load i18n %}
+
+{% block content %}
+    <div>
+        <h3>{% trans "name: " %} {{ author.name }}</h3>
+        <p>{% trans "email: " %} {{ author.email }}</p>
+        <p>{{ author.get_bio }}</p>
+        <img width="300px" src="{{ author.profile_image.url }}">
+    </div>
+    <br>
+    <br>
+    <br>
+    {% if blogs %}
+        {{ blogs|length }} {% trans "Blog" %}{{ blogs|length|pluralize }}:
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        {% for blog in blogs %}
+            <div>
+                <a href="{{ blog.get_absolute_url }}"><h4>{% trans "Title: " %} {{ blog.get_title }}</h4></a>
+            </div>
+            <br/>
+            <br/>
+        {% endfor %}
+    {% else %}
+        <p>{% trans "0 Blogs" %}</p>
+    {% endif %}
+{% endblock %}

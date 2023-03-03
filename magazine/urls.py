@@ -8,7 +8,6 @@ from django.views.decorators.cache import cache_page
 from django import get_version
 
 urlpatterns = [
-    path('i18n/', include('django.conf.urls.i18n')),
 ]
 
 urlpatterns += i18n_patterns(

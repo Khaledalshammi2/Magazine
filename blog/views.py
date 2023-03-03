@@ -16,14 +16,14 @@ from .forms import ProfitForm
 
 
 class Magazines(ListView):
-    template_name = "homepage.html"
+    template_name = "blog/homepage.html"
     queryset = Magazine.objects.all().order_by("-publish_date")
     context_object_name = "magazines"
 
 
 class Magazine(DetailView):
     model = Magazine
-    template_name = "magazine_details.html"
+    template_name = "blog/magazine_details.html"
     context_object_name = "magazine"
 
     def get_context_data(self, **kwargs):
@@ -35,12 +35,12 @@ class Magazine(DetailView):
 
 class BlogView(DetailView):
     model = Blog
-    template_name = "blog_details.html"
+    template_name = "blog/blog_details.html"
     context_object_name = "blog"
 
 
 class AuthorView(DetailView):
-    template_name = "author.html"
+    template_name = "blog/author.html"
     context_object_name = "author"
     model = Author
 
