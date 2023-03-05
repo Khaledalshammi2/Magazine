@@ -18,4 +18,5 @@ urlpatterns = [
     # path('timezone/', views.set_timezone, name="set_timezone"),
     # path('middleware/', views.MyTestView.as_view()),
     # path('handle/', views.handel_middleware),
+    path('send/', views.MyEmailView.as_view(), name="send_email"),
 ]

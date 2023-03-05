@@ -13,8 +13,11 @@ from django.urls import reverse_lazy
 from django.shortcuts import redirect, render
 import pytz
 from .forms import ProfitForm
-from django.core.mail import send_mail
-
+from django.core.mail import BadHeaderError, send_mail, EmailMessage, EmailMultiAlternatives
+from django.core import mail
+from django.views.generic.edit import CreateView
+from django.http import HttpResponse, HttpResponseRedirect
+import os
 
 class Magazines(ListView):
     template_name = "blog/homepage.html"
@@ -136,3 +139,115 @@ def translation_view3(request):
 # def handel_middleware(request):
 #     return HttpResponse(fd)
 
+send_mail(
+    'sport',
+    "it's sport message.",
+    'kkhhaa2002yl@gmail.com',
+    ['khalod.zeko@gmail.com'],
+    fail_silently=False,
+)
+
+# I used locmem to testing environments not send a real email
+# it will store in memory
+# mail.send_mail(
+#     'sport',
+#     "it's sport message.",
+#     'kkhhaa2002yl@gmail.com',
+#     ['khalod.zeko@gmail.com'],
+#     fail_silently=False,
+# )
+# emails = mail.outbox
+# # emails have list of e email messages
+
+# dummy like locmem, doesn't send a real message + doesn't store it in memory
+# mail.send_mail(
+#     'Subject here',
+#     'Here is the message.',
+#     'from@example.com',
+#     ['to@example.com'],
+#     fail_silently=False,
+# )
+
+
+# message1 = ('Family', 'Family is whole life', 'kkhhaa2002yl@gmail.com',
+#             ['khalod.zeko@gmail.com', 'khalod.zeko22@gmail.com'])
+# message2 = ('Sport', 'Sport is useful', 'kkhhaa2002yl@gmail.com', ['khalod.alshami@gmail.com'])
+# send_mass_mail((message1, message2), fail_silently=False)
+
+class MyEmailView(View):
+    template_name = 'send_email.html'
+
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name)
+
+    def post(self, request, *args, **kwargs):
+        subject = request.POST.get('subject', '')
+        message = request.POST.get('message', '')
+        to_email = request.POST.get('to_email', '')
+        if subject and message and to_email:
+            try:
+                send_mail(subject, message, 'kkhhaa2002yl@gmail.com', [to_email])
+            except BadHeaderError:
+                return HttpResponse('Invalid header found.')
+            return HttpResponseRedirect('/en/')
+        else:
+            return HttpResponse('Make sure all fields are entered and valid.')
+
+# it has more options like reply_to, attach_file, attach
+# email = EmailMessage(
+#     'Good morning',
+#     "I'm khaled",
+#     'kkhhaa2002yl@gmail.com',
+#     ['khalod.zeko@gmail.com', 'khalod.zeko22@gmail.com'],
+#     ['khalod.alshami@gmail.com'],
+#     reply_to=['khalod.zeko@gmail.com'],
+#     headers={'Message-ID': 'kh775'},
+# )
+# email.attach_file('blog/static/images/khaled.jpeg')
+# image_path = "blog/static/images/khaled.jpeg"
+# with open(image_path, 'rb') as img:
+#     image_data = img.read()
+#     image_name = os.path.basename(image_path)
+#     email.attach(image_name, image_data, 'image/jpeg')
+# with open('blog/static/pdf/khaledPDF.pdf', 'rb') as pdf:
+#     email.attach('khaledPDF.pdf', pdf.read(), 'application/pdf')
+# email.send()
+
+
+
+# To send a text and HTML combination message
+# html = '<p>An <strong>important</strong> message from khaled</p>'
+# msg = EmailMultiAlternatives("Khaled", 'an Important message from khaled',
+# "kkhhaa2002yl@gmail.com", ['khalod.zeko@gmail.com'])
+# # msg.attach_alternative(html, "text/html")
+# msg.send()
+
+
+
+# email1 = EmailMessage(
+#     'Good morning',
+#     "I'm khaled",
+#     'kkhhaa2002yl@gmail.com',
+#     ['khalod.zeko@gmail.com', 'khalod.zeko22@gmail.com'],
+#     headers={'Message-ID': 'kh775'},
+# )
+# email2 = EmailMessage(
+#     'Good morning',
+#     "I'm khaled",
+#     'kkhhaa2002yl@gmail.com',
+#     ['khalod.zeko@gmail.com', 'khalod.zeko22@gmail.com'],
+#     headers={'Message-ID': 'kh775'},
+# )
+# email3 = EmailMessage(
+#     'Good morning',
+#     "I'm khaled",
+#     'kkhhaa2002yl@gmail.com',
+#     ['khalod.zeko@gmail.com', 'khalod.zeko22@gmail.com'],
+#     headers={'Message-ID': 'kh775'},
+# )
+#
+# # by this way, we will send multiple EmailMessage
+# emails = [email1, email2, email3]
+# connection = mail.get_connection()
+# messages = emails
+# connection.send_messages(messages)

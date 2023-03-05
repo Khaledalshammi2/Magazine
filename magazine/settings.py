@@ -129,3 +129,13 @@ LANGUAGES = (
 )
 
 FORMAT_MODULE_PATH = 'blog.formats'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'kkhhaa2002yl@gmail.com'
+EMAIL_HOST_PASSWORD = 'dpsbdcuodvdqysic'
+EMAIL_FILE_PATH = 'email_logs'
