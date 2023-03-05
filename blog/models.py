@@ -7,6 +7,7 @@ from django.utils import timezone
 import datetime
 from django.contrib.auth.models import Permission
 
+
 # used with Model fields, relationships, verbose_name, help_text, Model methods description
 
 
@@ -34,6 +35,22 @@ class Author(models.Model):
         return self.bio
 
 
+# class MagazineQuerySet(models.QuerySet):
+#     def magazines(self):
+#         return self.all().order_by("-publish_date")
+
+# class MagazineManager(models.Manager):
+#     def get_queryset(self):
+#         return MagazineQuerySet(self.model, using=self._db)#
+#     def magazines(self):
+#         return self.get_queryset().magazines()
+
+
+class MagazineManager(models.Manager):
+    def magazines(self):
+        # return super().get_queryset().all().order_by("-publish_date")
+        return self.all().order_by("-publish_date")
+
 
 class Magazine(models.Model):
     title = models.CharField(max_length=150, verbose_name=_("Title"))
@@ -41,6 +58,10 @@ class Magazine(models.Model):
     publish_date = models.DateTimeField(auto_now_add=True, verbose_name=_("Publish date"))
     description = models.TextField(verbose_name=_("Description"))
     description_ar = models.TextField(null=True, default="", verbose_name=_("Description in arabic"))
+
+    # magazines = MagazineManager()
+    # objects = MagazineQuerySet.as_manager() instead of MagazineManager class
+    objects = MagazineManager()
 
     def __str__(self) -> str:
         language = get_language()
@@ -68,6 +89,16 @@ class Magazine(models.Model):
         return self.description
 
 
+class BlogManager(models.Manager):
+    def published_magazines(self, magazine):
+        blogs = Blog.objects.filter(magazine_id=magazine, status="p")
+        return blogs.order_by("-publish_date")
+
+    def author_blogs(self, author):
+        blogs = Blog.objects.filter(author=author, status='p')
+        return blogs
+
+
 class Blog(models.Model):
     STATUS_CHOICES = [
         ('d', _('Draft')),
@@ -83,6 +114,8 @@ class Blog(models.Model):
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, verbose_name=_("Status"))
     cover_image = models.ImageField(upload_to='blog_covers/', verbose_name=_("Image"))
     publish_date = models.DateTimeField(auto_now_add=True, verbose_name=_("Publish date"))
+
+    objects = BlogManager()
 
     def __str__(self):
         language = get_language()
@@ -113,11 +146,28 @@ class Blog(models.Model):
         return self.status
 
 
+class PersonManager(models.Manager):
+    # Person.objects.manager_only_method()
+    def manager_only_method(self):
+        return self.all()
+
+
+class PersonQuerySet(models.QuerySet):
+    # Person.objects.manager_and_queryset_method()
+    def manager_and_queryset_method(self):
+        return self.all()
+
+
+MyManager = PersonManager.from_queryset(PersonQuerySet)
+
+
 class Person(models.Model):
     name = models.CharField(max_length=100, help_text=_('Enter your fullname'), verbose_name=_("Name"))
     name_ar = models.CharField(max_length=100, null=True, default="", verbose_name=_("Arabic Name"))
     age = models.IntegerField(verbose_name=_("Age"))
     age_ar = models.IntegerField(verbose_name=_("Arabic age"))
+
+    objects = MyManager()
 
     class Meta:
         verbose_name = _('person')
@@ -146,14 +196,43 @@ class Person(models.Model):
         return self.age
 
 
+class CarQuerySet(models.QuerySet):
+    # Available on both Manager and QuerySet.
+    # Car.objects.public_method()
+    def public_method(self):
+        return self.all()
+
+    # Available only on QuerySet.
+    # Car.objects.all()._private_method()
+    def _private_method(self):
+        return self.all()
+
+    # Available only on QuerySet.
+    # Car.objects.all().opted_out_public_method()
+    def opted_out_public_method(self):
+        return self.all()
+
+    opted_out_public_method.queryset_only = True
+
+    # Available on both Manager and QuerySet.
+    # Car.objects._opted_in_private_method()
+    def _opted_in_private_method(self):
+        return self.all()
+
+    _opted_in_private_method.queryset_only = False
+
+
 class Car(models.Model):
     person = models.ForeignKey(Person, on_delete=models.CASCADE, verbose_name=_('Person'))
     # date = models.DateTimeField(localize=True)
     publish_date = models.DateTimeField(auto_now_add=True, verbose_name=_('Publish_date'))
     storage = models.IntegerField(verbose_name=_('Storage'))
-    storage_ar = models.IntegerField(verbose_name=_('Storage in arabic'))
+    storage_ar = models.IntegerField(verbose_name=_('Storage in arabic'), null=True, blank=True)
     profit = models.DecimalField(max_digits=4, decimal_places=2, verbose_name=_('Profit'))
-    profit_ar = models.DecimalField(max_digits=4, decimal_places=2, verbose_name=_('Profit in arabic'))
+    profit_ar = models.DecimalField(max_digits=4, decimal_places=2, verbose_name=_('Profit in arabic'),
+                                    null=True, blank=True)
+
+    objects = CarQuerySet.as_manager()
 
     class Meta:
         verbose_name = _('car')

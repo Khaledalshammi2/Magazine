@@ -268,6 +268,8 @@ class MagazineAdmin(admin.ModelAdmin):
 admin.site.register(Blog, BlogAdmin)
 admin.site.register(Magazine, MagazineAdmin)
 admin.site.register(Author, AuthorAdmin)
+admin.site.register(Car)
+admin.site.register(Person)
 
 admin.site.index_title = _("Magazine")
 admin.site.site_header = _("Khaled site")

@@ -13,11 +13,13 @@ from django.urls import reverse_lazy
 from django.shortcuts import redirect, render
 import pytz
 from .forms import ProfitForm
+from django.core.mail import send_mail
 
 
 class Magazines(ListView):
     template_name = "blog/homepage.html"
-    queryset = Magazine.objects.all().order_by("-publish_date")
+    # queryset = Magazine.magazines.all()
+    queryset = Magazine.objects.magazines()
     context_object_name = "magazines"
 
     def get_context_data(self, **kwargs):
@@ -34,7 +36,8 @@ class Magazine(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        blogs = Blog.objects.filter(magazine_id=self.kwargs['pk'], status="p").order_by("-publish_date")
+        # blogs = Blog.objects.filter(magazine_id=self.kwargs['pk'], status="p").order_by("-publish_date")
+        blogs = Blog.objects.published_magazines(magazine=self.kwargs['pk'])
         context["blogs"] = blogs
         return context
 
@@ -53,7 +56,7 @@ class AuthorView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         author = self.get_object()
-        blogs = Blog.objects.filter(author=author, status='p')
+        blogs = Blog.objects.author_blogs(author=author)
         context["blogs"] = blogs
         return context
 
@@ -132,3 +135,4 @@ def translation_view3(request):
 
 # def handel_middleware(request):
 #     return HttpResponse(fd)
+
