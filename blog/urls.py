@@ -16,4 +16,6 @@ urlpatterns = [
     # path('Localize/', views.LocalizationView.as_view()),
     # path('profit/', views.ProfitView.as_view()),
     # path('timezone/', views.set_timezone, name="set_timezone"),
+    # path('middleware/', views.MyTestView.as_view()),
+    # path('handle/', views.handel_middleware),
 ]

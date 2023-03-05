@@ -20,7 +20,7 @@ def display_image(obj):
     return mark_safe('<img src="{}" width="60" />'.format(obj.profile_image.url))
 
 
-@admin.display(description=_('Name'))
+@admin.display(description=_('Name.'))
 def colored_name(obj):
     return format_html(
         '<span style="color: #{};">{}</span>',
@@ -89,7 +89,7 @@ def colored_author(obj):
     )
 
 
-@admin.display(description=_('Title'))
+@admin.display(description=_('Title.'))
 def colored_title(obj):
     language = get_language()
     if language == "ar":
@@ -103,7 +103,7 @@ def colored_title(obj):
     )
 
 
-@admin.display(boolean=True)
+@admin.display(description=_("Publish."), boolean=True)
 def published(obj):
     return obj.status == "p"
 
@@ -218,7 +218,7 @@ class MagazineAdmin(admin.ModelAdmin):
     inlines = (BlogInline,)
     search_fields = ['title']
 
-    @admin.display(description=_('Description'))
+    @admin.display(description=_('Description.'))
     def truncated_description(self, obj):
         language = get_language()
         if language == "ar":
@@ -231,7 +231,7 @@ class MagazineAdmin(admin.ModelAdmin):
             result
         )
 
-    @admin.display(description=_('Title'))
+    @admin.display(description=_('Title.'))
     def colored_title(self, obj):
         language = get_language()
         if language == "ar":

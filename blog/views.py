@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from .models import *
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, TemplateView
 from django.utils.translation import gettext as _, ngettext, gettext_lazy
 from django.utils.text import format_lazy
 from django.views import View
@@ -19,6 +19,12 @@ class Magazines(ListView):
     template_name = "blog/homepage.html"
     queryset = Magazine.objects.all().order_by("-publish_date")
     context_object_name = "magazines"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        extra_data = self.request.extra_data
+        context['extra_data'] = extra_data
+        return context
 
 
 class Magazine(DetailView):
@@ -119,3 +125,10 @@ def translation_view3(request):
 #         return redirect('/')
 #     else:
 #         return render(request, 'blog/time_zone_template.html', {'timezones': pytz.common_timezones})
+
+
+# class MyTestView(TemplateView):
+#     template_name = 'my_template.html'
+
+# def handel_middleware(request):
+#     return HttpResponse(fd)

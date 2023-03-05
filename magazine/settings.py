@@ -19,6 +19,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'django.contrib.humanize',
+    # 'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -26,11 +27,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'blog',
-    'jazzmin',
+    # 'tabular_permissions',
 ]
 
 MIDDLEWARE = [
-    'blog.middleware.timezone_middleware.TimezoneMiddleware',
+    # 'blog.middleware.timezone_middleware.TimezoneMiddleware',
+    # 'blog.middleware.middleware.LogMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -39,6 +41,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.locale.LocaleMiddleware',
+    'blog.middleware.middleware.ExtraDataMiddleware',
+    # 'blog.middleware.middleware.AuthMiddleware',
 ]
 
 ROOT_URLCONF = 'magazine.urls'
@@ -60,6 +64,8 @@ TEMPLATES = [
         },
     },
 ]
+sync_capable = True
+async_capable = True
 
 WSGI_APPLICATION = 'magazine.wsgi.application'
 
@@ -94,7 +100,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'en'
 
 TIME_ZONE = 'Asia/Kuwait'
 
