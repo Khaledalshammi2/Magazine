@@ -1,0 +1,24 @@
+{% include "blog/base.html" %}
+{% load i18n %}
+{% block content %}
+    <br>
+    <h4>Contact us</h4>
+    <form method="POST" action="{% url 'blogs:contact_us' %}">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        {% for field in form %}
+            <div>
+                {% if field.errors %}
+                    <ol>
+                    {% for error in field.errors %}
+                        <li><strong>{{ error|escape }}</strong></li>
+                    {% endfor %}
+                    </ol>
+                {% endif %}
+                {{ field.legend_tag }} {{ field }}
+            </div>
+            <br>
+        {% endfor %}
+        <button type="submit">Send</button>
+    </form>
+{% endblock %}

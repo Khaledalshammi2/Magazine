@@ -41,7 +41,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.locale.LocaleMiddleware',
-    'blog.middleware.middleware.ExtraDataMiddleware',
+    # 'blog.middleware.middleware.ExtraDataMiddleware',
     # 'blog.middleware.middleware.AuthMiddleware',
 ]
 

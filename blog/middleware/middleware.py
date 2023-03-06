@@ -86,11 +86,11 @@ class AuthMiddleware:
 # cache.set(key, response)
 # return response
 
-class ExtraDataMiddleware(MiddlewareMixin):
-    def process_view(self, request, view_func, view_args, view_kwargs):
-        if isinstance(view_func, Magazines.as_view().__class__):
-            extra_data = {'test': _('Middleware testing')}
-            request.extra_data = extra_data
+# class ExtraDataMiddleware(MiddlewareMixin):
+#     def process_view(self, request, view_func, view_args, view_kwargs):
+#         if isinstance(view_func, Magazines.as_view().__class__):
+#             extra_data = {'test': _('Middleware testing')}
+#             request.extra_data = extra_data
 
 # class CustomDataMiddleware:
 #     def __init__(self, get_response):

@@ -6,15 +6,16 @@
 <head>
     <meta charset="UTF-8">
     <title>{% trans "Khaled" %}</title>
-    <link rel="stylesheet" href="{% static 'css/base.css' %}">
 </head>
 <body>
     <div class="header">
         <h1>{% trans "Khaled Site" %}</h1>
         <div>
             <h3><a href="{% url 'blogs:magazines' %}">{% trans "Magazines" %}</a></h3>
+            <h3><a href="{% url 'blogs:contact_us' %}">{% trans "Contact us" %}</a></h3>
         </div>
     </div>
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
     {% block content %}{% endblock %}
 </body>
 </html>

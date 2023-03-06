@@ -2,6 +2,8 @@ from django import forms
 from .models import Author
 from django.utils.translation import gettext as _
 from django.utils.translation import ngettext_lazy
+from django.forms import formset_factory
+
 
 class AuthorForm(forms.ModelForm):
     class Meta:
@@ -41,6 +43,12 @@ class AuthorForm(forms.ModelForm):
 #             'my_date': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}, localize=True),
 #         }
 
-class ProfitForm(forms.Form):
-   storage = forms.IntegerField()
-   profit = forms.DecimalField(max_digits=4, decimal_places=2, localize=True)
+# class ProfitForm(forms.Form):
+#    storage = forms.IntegerField()
+#    profit = forms.DecimalField(max_digits=4, decimal_places=2, localize=True)
+
+
+class NameForm(forms.Form):
+    your_name = forms.CharField(max_length=50, label=_("Enter your name"))
+
+

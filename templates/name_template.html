@@ -1,0 +1,5 @@
+<form method="POST" action="{% url 'blogs:name' %}">
+    {% csrf_token %}
+    {{ form.as_div }}
+    <button type="submit">Send</button>
+</form>

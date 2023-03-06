@@ -12,11 +12,12 @@ from django.views.generic.edit import FormView
 from django.urls import reverse_lazy
 from django.shortcuts import redirect, render
 import pytz
-from .forms import ProfitForm
+from .forms import EmailForm, NameForm
 from django.core.mail import BadHeaderError, send_mail, EmailMessage, EmailMultiAlternatives
 from django.core import mail
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, FormView
 from django.http import HttpResponse, HttpResponseRedirect
+from django.contrib import messages
 import os
 
 class Magazines(ListView):
@@ -25,11 +26,11 @@ class Magazines(ListView):
     queryset = Magazine.objects.magazines()
     context_object_name = "magazines"
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        extra_data = self.request.extra_data
-        context['extra_data'] = extra_data
-        return context
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     extra_data = self.request.extra_data
+    #     context['extra_data'] = extra_data
+    #     return context
 
 
 class Magazine(DetailView):
@@ -64,39 +65,39 @@ class AuthorView(DetailView):
         return context
 
 
-def translation_view1(request):
-    # may have several meaning, so we can define its meaning
-    month = pgettext("month name", "May")
-    # npgettext() with plural
-    output = _("Hello world, We are in %(month)s") % {'month': month}
-    return HttpResponse(output)
+# def translation_view1(request):
+#     # may have several meaning, so we can define its meaning
+#     month = pgettext("month name", "May")
+#     # npgettext() with plural
+#     output = _("Hello world, We are in %(month)s") % {'month': month}
+#     return HttpResponse(output)
 
 
-class TranslationView2(View):
-    def get(self, request, page):
-        pluralization = ngettext(
-            "I'm in page %(page)d",
-            "I'm in pages %(page)d",
-            page,
-        ) % {
-                            'page': page,
-                        }
-        return HttpResponse(pluralization)
+# class TranslationView2(View):
+#     def get(self, request, page):
+#         pluralization = ngettext(
+#             "I'm in page %(page)d",
+#             "I'm in pages %(page)d",
+#             page,
+#         ) % {
+#                             'page': page,
+#                         }
+#         return HttpResponse(pluralization)
+#
+#
+# mark_safe_lazy = lazy(mark_safe, str)
 
 
-mark_safe_lazy = lazy(mark_safe, str)
-
-
-def translation_view3(request):
-    # name = gettext_lazy('Khaled')
-    name = _('Khaled')
-    age = _("20 years old")
-    # result = format_lazy('{name}: {age} years old', name=name, age=age)
-    result = "%(name)s %(age)s" % {"name": name, "age": age}
-    test = mark_safe_lazy(_("<p>programmer</p>"))
-    return render(request, "blog/translation_template1.html", {
-        "result": result,
-        "test": test})
+# def translation_view3(request):
+#     # name = gettext_lazy('Khaled')
+#     name = _('Khaled')
+#     age = _("20 years old")
+#     # result = format_lazy('{name}: {age} years old', name=name, age=age)
+#     result = "%(name)s %(age)s" % {"name": name, "age": age}
+#     test = mark_safe_lazy(_("<p>programmer</p>"))
+#     return render(request, "blog/translation_template1.html", {
+#         "result": result,
+#         "test": test})
 
 
 # def gettext_and_gettext_lazy(request):
@@ -139,13 +140,13 @@ def translation_view3(request):
 # def handel_middleware(request):
 #     return HttpResponse(fd)
 
-send_mail(
-    'sport',
-    "it's sport message.",
-    'kkhhaa2002yl@gmail.com',
-    ['khalod.zeko@gmail.com'],
-    fail_silently=False,
-)
+# send_mail(
+#     'sport',
+#     "it's sport message.",
+#     'kkhhaa2002yl@gmail.com',
+#     ['khalod.zeko@gmail.com'],
+#     fail_silently=False,
+# )
 
 # I used locmem to testing environments not send a real email
 # it will store in memory
@@ -174,24 +175,24 @@ send_mail(
 # message2 = ('Sport', 'Sport is useful', 'kkhhaa2002yl@gmail.com', ['khalod.alshami@gmail.com'])
 # send_mass_mail((message1, message2), fail_silently=False)
 
-class MyEmailView(View):
-    template_name = 'send_email.html'
-
-    def get(self, request, *args, **kwargs):
-        return render(request, self.template_name)
-
-    def post(self, request, *args, **kwargs):
-        subject = request.POST.get('subject', '')
-        message = request.POST.get('message', '')
-        to_email = request.POST.get('to_email', '')
-        if subject and message and to_email:
-            try:
-                send_mail(subject, message, 'kkhhaa2002yl@gmail.com', [to_email])
-            except BadHeaderError:
-                return HttpResponse('Invalid header found.')
-            return HttpResponseRedirect('/en/')
-        else:
-            return HttpResponse('Make sure all fields are entered and valid.')
+# class MyEmailView(View):
+#     template_name = 'send_email.html'
+#
+#     def get(self, request, *args, **kwargs):
+#         return render(request, self.template_name)
+#
+#     def post(self, request, *args, **kwargs):
+#         subject = request.POST.get('subject', '')
+#         message = request.POST.get('message', '')
+#         to_email = request.POST.get('to_email', '')
+#         if subject and message and to_email:
+#             try:
+#                 send_mail(subject, message, 'kkhhaa2002yl@gmail.com', [to_email])
+#             except BadHeaderError:
+#                 return HttpResponse('Invalid header found.')
+#             return HttpResponseRedirect('/en/')
+#         else:
+#             return HttpResponse('Make sure all fields are entered and valid.')
 
 # it has more options like reply_to, attach_file, attach
 # email = EmailMessage(
@@ -251,3 +252,28 @@ class MyEmailView(View):
 # connection = mail.get_connection()
 # messages = emails
 # connection.send_messages(messages)
+
+# class NameView(FormView):
+#     template_name = 'name_template.html'
+#     form_class = NameForm
+#     success_url = reverse_lazy('blogs:magazines')
+#
+#     def form_valid(self, form):
+#         print(form.cleaned_data['your_name'])
+#         return super().form_valid(form)
+#
+#     def form_invalid(self, form):
+#         messages.error(self.request, 'Please correct the errors below.')
+#         return super().form_invalid(form)
+
+class ContactView(FormView):
+    template_name = "email.html"
+    form_class = EmailForm
+    success_url = reverse_lazy('blogs:magazines')
+
+    def form_valid(self, form):
+        subject = form.cleaned_data['subject']
+        message = form.cleaned_data['message']
+        sender = form.cleaned_data['sender']
+        send_mail(subject, message, sender, ['kkhhaa2002yl@gmail.com'])
+        return super().form_valid(form)
