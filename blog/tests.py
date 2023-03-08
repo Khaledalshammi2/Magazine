@@ -44,11 +44,11 @@ class MagazineTestCase(TestCase):
         # with self.assertRaises(ValueError, msg="Custom error message"):
 
     def test_magazine_context(self):
-        create_magazine('khfhsd', 'سليليس', 'shgdsgdg', 'لصسالاساتف')
-        create_magazine('khfhsd', 'سليليس', 'shgdsgdg', 'لصسالاساتف')
-        create_magazine('khfhsd', 'سليليس', 'shgdsgdg', 'لصسالاساتف')
-        create_magazine('khfhsd', 'سليليس', 'shgdsgdg', 'لصسالاساتف')
-        create_magazine('khfhsd', 'سليليس', 'shgdsgdg', 'لصسالاساتف')
+        create_magazine('khaled1', 'خالد1', 'alshammi1', 'الشامي1')
+        create_magazine('khaled2', 'خالد2', 'alshammi2', 'الشامي2')
+        create_magazine('khaled3', 'خالد3', 'alshammi3', 'الشامي3')
+        create_magazine('khaled4', 'خالد4', 'alshammi4', 'الشامي4')
+        create_magazine('khaled5', 'خالد5', 'alshammi5', 'الشامي5')
         response = self.client.get(reverse('blogs:magazines'))
         self.assertEqual(len(response.context['magazines']), 5)
 
