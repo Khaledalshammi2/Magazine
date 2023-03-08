@@ -1,0 +1,22 @@
+{% include "blog/base.html" %}
+{% load i18n %}
+
+{% block content %}
+    <br>
+    <h4>{% trans "Create Author" %}</h4>
+    <form method="POST" action="{% url 'blogs:create_author' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% for field in form %}
+            {% if field.errors %}
+                {% for error in field.errors %}
+                    <p><strong>{{ error }}</strong></p>
+                {% endfor %}
+            {% endif %}
+            <div>
+                {{ field.label_tag }} {{ field }}
+                <br>
+            </div>
+        {% endfor %}
+        <button type="submit">{% trans "Create" %}</button>
+    </form>
+{% endblock %}

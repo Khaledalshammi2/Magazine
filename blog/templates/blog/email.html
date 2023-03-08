@@ -10,9 +10,9 @@
             <div>
                 {% if field.errors %}
                     <ol>
-                    {% for error in field.errors %}
-                        <li><strong>{{ error|escape }}</strong></li>
-                    {% endfor %}
+                        {% for error in field.errors %}
+                            <li><strong>{{ error|escape }}</strong></li>
+                        {% endfor %}
                     </ol>
                 {% endif %}
                 {{ field.legend_tag }} {{ field }}

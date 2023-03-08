@@ -1,0 +1,16 @@
+<form method="POST">
+    {% csrf_token %}
+    {{ formset.management_form }}
+    <table>
+        {% for form in formset %}
+            {{ form }}
+        {% endfor %}
+    </table>
+    <button type="submit">Done</button>
+</form>
+
+{#<form method="post">#}
+{#    <table>#}
+{#        {{ formset }}#}
+{#    </table>#}
+{#</form>#}

@@ -6,15 +6,16 @@ from django.utils.translation import gettext_lazy as _, get_language
 from django.utils import timezone
 import datetime
 from django.contrib.auth.models import Permission
+from django.utils.translation import ngettext
 
 
 # used with Model fields, relationships, verbose_name, help_text, Model methods description
 
 
 class Author(models.Model):
-    name = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name=_("Author"))
+    name = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name=_("Name"))
     email = models.EmailField(verbose_name=_("Email"))
-    profile_image = models.ImageField(upload_to='profile_images/', verbose_name=_("Profile image"))
+    profile_image = models.ImageField(upload_to='profile_images/', verbose_name=_("Profile Image"))
     bio = models.TextField(verbose_name=_("Bio"))
     bio_ar = models.TextField(verbose_name=_("Bio in arabic"), null=True, default="")
 
@@ -182,6 +183,16 @@ class Person(models.Model):
         if language == "ar":
             return self.name_ar
         return self.name
+
+    def person_details(self):
+        language = get_language()
+        if language == "ar":
+            return "%s, %d سنة" % (self.name_ar, self.age_ar)
+        return ngettext(
+            "%s, %d year old",
+            "%s, %d years old",
+            self.age
+        ) % (self.name, self.age)
 
     def get_name(self):
         language = get_language()

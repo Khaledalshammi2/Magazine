@@ -5,7 +5,7 @@ from django.shortcuts import redirect
 from django.urls import reverse_lazy, reverse
 from django.utils.deprecation import MiddlewareMixin
 from django.utils.translation import gettext_lazy as _
-from blog.views import Magazines
+from blog.views import MagazinesView
 from PIL import Image
 from django.core.exceptions import ValidationError
 

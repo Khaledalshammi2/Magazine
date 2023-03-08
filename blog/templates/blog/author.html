@@ -3,10 +3,16 @@
 
 {% block content %}
     <div>
-        <h3>{% trans "name: " %} {{ author.name }}</h3>
-        <p>{% trans "email: " %} {{ author.email }}</p>
+        <h3>{% trans "Name: " %} {{ author.name }}</h3>
+        <p>{% trans "Email: " %} {{ author.email }}</p>
         <p>{{ author.get_bio }}</p>
         <img width="300px" src="{{ author.profile_image.url }}">
+        <br>
+        <form method="post" action="{% url 'blogs:delete_author' author.pk %}">
+            {% csrf_token %}
+            <button type="submit">{% trans "Delete" %}</button>
+            <a href="{% url 'blogs:create_author' %}"><h4>{% trans "Create Author" %}</h4></a>
+        </form>
     </div>
     <br>
     <br>

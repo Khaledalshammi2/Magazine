@@ -12,15 +12,17 @@ from django.views.generic.edit import FormView
 from django.urls import reverse_lazy
 from django.shortcuts import redirect, render
 import pytz
-from .forms import EmailForm, NameForm
+from .forms import *
 from django.core.mail import BadHeaderError, send_mail, EmailMessage, EmailMultiAlternatives
 from django.core import mail
-from django.views.generic.edit import CreateView, FormView
+from django.views.generic.edit import CreateView, FormView, DeleteView
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib import messages
 import os
+from django.forms import formset_factory
 
-class Magazines(ListView):
+
+class MagazinesView(ListView):
     template_name = "blog/homepage.html"
     # queryset = Magazine.magazines.all()
     queryset = Magazine.objects.magazines()
@@ -33,7 +35,7 @@ class Magazines(ListView):
     #     return context
 
 
-class Magazine(DetailView):
+class MagazineView(DetailView):
     model = Magazine
     template_name = "blog/magazine_details.html"
     context_object_name = "magazine"
@@ -215,14 +217,12 @@ class AuthorView(DetailView):
 # email.send()
 
 
-
 # To send a text and HTML combination message
 # html = '<p>An <strong>important</strong> message from khaled</p>'
 # msg = EmailMultiAlternatives("Khaled", 'an Important message from khaled',
 # "kkhhaa2002yl@gmail.com", ['khalod.zeko@gmail.com'])
 # # msg.attach_alternative(html, "text/html")
 # msg.send()
-
 
 
 # email1 = EmailMessage(
@@ -267,7 +267,7 @@ class AuthorView(DetailView):
 #         return super().form_invalid(form)
 
 class ContactView(FormView):
-    template_name = "email.html"
+    template_name = "blog/email.html"
     form_class = EmailForm
     success_url = reverse_lazy('blogs:magazines')
 
@@ -277,3 +277,45 @@ class ContactView(FormView):
         sender = form.cleaned_data['sender']
         send_mail(subject, message, sender, ['kkhhaa2002yl@gmail.com'])
         return super().form_valid(form)
+
+
+def manage_articles(request):
+    ArticleFormset = formset_factory(ArticleForm, extra=2, can_delete=True)
+    if request.method == 'POST':
+        formset = ArticleFormset(request.POST, request.FILES, prefix='articles')
+        if formset.is_valid():
+            for form in formset:
+                print(form.cleaned_data.get('DELETE'))
+    else:
+        formset = ArticleFormset(prefix='articles')
+    return render(request, 'blog/manage.html', {'formset': formset})
+
+
+class AuthorCreateView(FormView):
+    form_class = AuthorForm
+    template_name = "blog/create/create_author.html"
+    success_url = reverse_lazy('blogs:magazines')
+
+    def form_valid(self, form):
+        name = form.cleaned_data['name']
+        email = form.cleaned_data['email']
+        profile_image = form.cleaned_data['profile_image']
+        bio = form.cleaned_data['bio']
+        bio_ar = form.cleaned_data['bio_ar']
+        author = Author(name=name, email=email, bio=bio, bio_ar=bio_ar, profile_image=profile_image)
+        author.save()
+        return super().form_valid(form)
+
+
+class DeleteAuthorView(DeleteView):
+    model = Author
+    success_url = reverse_lazy('blogs:magazines')
+
+    def post(self, request, *args, **kwargs):
+        return self.delete(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        success_url = self.get_success_url()
+        self.object.delete()
+        return HttpResponseRedirect(success_url)
